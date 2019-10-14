@@ -10,7 +10,9 @@ public class Zona
 	
 	private int id;
 	
-	public Zona(String pNombre, long pPerimetro, long pArea, int pId)
+	private Punto[] coordenadas;
+	
+	public Zona(String pNombre, long pPerimetro, long pArea, int pId, Punto[] pCoord)
 	{
 		nombre = pNombre;
 		
@@ -19,6 +21,16 @@ public class Zona
 		area = pArea;
 		
 		id = pId;
+		
+		coordenadas = pCoord;
+	}
+
+	public Punto[] getCoordenadas() {
+		return coordenadas;
+	}
+
+	public void setCoordenadas(Punto[] coordenadas) {
+		this.coordenadas = coordenadas;
 	}
 
 	public String getNombre() {
