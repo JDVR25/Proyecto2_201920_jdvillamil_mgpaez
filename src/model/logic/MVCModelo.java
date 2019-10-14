@@ -17,8 +17,6 @@ import model.data_structures.IEstructura;
 import model.data_structures.ListaSencillamenteEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.Nodo;
-import model.data_structures.Queue;
-import model.data_structures.Stack;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
