@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Representa un nodo dentro de la lista. Este nodo almacena un elemento.
  *
- * @param <E> Tipo de elemento que se est� almacenando dentro de los nodos.
+ * @param <E> Tipo de elemento que se esta almacenando dentro de los nodos.
  */
 public class Nodo<E> implements Serializable
 {
