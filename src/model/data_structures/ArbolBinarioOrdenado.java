@@ -21,7 +21,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public ArbolBinarioOrdenado()
 	{
-		//TODO 4.2.1 complete según la documentación
 		super();
 	}
 
@@ -33,12 +32,16 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public void agregar(K identificador, T elemento) throws IllegalArgumentException
 	{
-		//TODO 4.2.2 complete según la documentación - recuerde considerar el caso en que aún no hay elementos en el árbol
 		if(raiz == null)
+		{
 			raiz = new NodoABO<K, T>(identificador, elemento);
+
+			((NodoABO<K, T>) raiz).laRaizNo();
+		}
 		else
 		{
 			((NodoABO<K,T>) raiz).agregar(elemento, identificador);
+			((NodoABO<K, T>) raiz).laRaizNo();
 		}
 	}
 
@@ -49,7 +52,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public void eliminar(K identificador) throws NoSuchElementException
 	{
-		//TODO 4.2.3 Complete de acuerdo a la documentación. Recuerde el caso en que el elemento a eliminar es la raíz.
 		if(raiz == null)
 		{
 			throw new NoSuchElementException();
@@ -70,7 +72,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public ArbolBinarioOrdenado<K, T> arbolCabeza(K limite) throws Exception {
 		ArbolBinarioOrdenado<K, T> cabeza = new ArbolBinarioOrdenado<K, T>();
-		//TODO 4.2.4 complete según la documentación
 		if(raiz != null)
 			((NodoABO<K,T>) raiz).arbolCabeza(limite, cabeza);
 		return cabeza;
@@ -82,7 +83,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public K darIdentificadorMenor()
 	{
-		//TODO 4.2.5 complete según la documentación
 		K menor = null;
 		if(raiz != null)
 		{
@@ -97,7 +97,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public K darIdentificadorMayor()
 	{
-		//TODO 4.2.6 complete según la documentación
 		K mayor = null;
 		if(raiz != null)
 		{
@@ -116,7 +115,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	public ArbolBinarioOrdenado<K, T> darSubArbol(K limiteInferior, K limiteSuperior) throws Exception 
 	{
 		ArbolBinarioOrdenado<K, T> sub = new ArbolBinarioOrdenado<K, T>();
-		//TODO 4.2.7 complete según la documentación
 		if(raiz != null)
 			((NodoABO<K,T>) raiz).subArbol(limiteInferior, limiteSuperior, sub);
 		return sub;
@@ -131,7 +129,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	public ArbolBinarioOrdenado<K, T> darArbolCola(K limiteInferior) throws Exception 
 	{
 		ArbolBinarioOrdenado<K, T> cola = new ArbolBinarioOrdenado<K, T>();
-		//TODO 4.2.8 complete según la documentación
 		if(raiz != null)
 			((NodoABO<K,T>) raiz).arbolCola(limiteInferior, cola);
 		return cola;
@@ -143,7 +140,6 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 	 */
 	public Collection<T> darInorden() 
 	{
-		//TODO 4.2.9 complete según la documentación
 		Collection<T> elementos = new ArrayList<T>();
 		if(raiz != null)
 		{
@@ -151,4 +147,5 @@ public class ArbolBinarioOrdenado <K extends Comparable<K>, T> extends Arbol<K, 
 		}
 		return elementos;
 	}
+	//Basado en el ejercicio de nivel de apo2
 }

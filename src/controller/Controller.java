@@ -22,11 +22,6 @@ public class Controller {
 
 	private boolean cargaRealizada;
 
-	private int zonaMenorExistente;
-
-	private int zonaMayorExistente;
-
-	private int trimestre;
 
 	/**
 	 * Crear la vista y el modelo del proyecto
@@ -54,20 +49,19 @@ public class Controller {
 			case 1:
 				if(!cargaRealizada)
 				{
-					System.out.println("--------- \nIngrese un trimestre como un numero");
-					dato = lector.next();
-					trimestre = Integer.parseInt(dato);
+					System.out.println("--------- \nSe cargaran los datos");
 					modelo = new MVCModelo(); 
-					modelo.cargarDatos(Integer.parseInt(dato));
-					zonaMenorExistente = modelo.darZonaMenor();
-					zonaMayorExistente = modelo.darZonaMayor();
+					modelo.cargarDatosCSV(1);
+					modelo.cargarDatosCSV(2);
+					modelo.cargarDatosNodos();
+					modelo.cargarDatosZonas();
 					System.out.println("--------- \nSe cargaran los datos: ");
 					System.out.println("Datos cargados:");
 					System.out.println("Total de viajes por mes: " + modelo.darNumViajesMes());
 					System.out.println("Total de viajes por dias: " + modelo.darNumViajesDia());
 					System.out.println("Total de viajes por horas: " + modelo.darNumViajesHora());
-					System.out.println("Zona con menor identificador: " + zonaMenorExistente);
-					System.out.println("Zona con mayor identificador: " + zonaMayorExistente);
+					System.out.println("Total de zonas: " + modelo.darNumZonas());
+					System.out.println("Total de nodos: " + modelo.darNumNodos());
 				}
 				else
 				{

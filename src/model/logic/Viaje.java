@@ -15,6 +15,7 @@ public class Viaje implements Comparable<Viaje>
 	private double tiempoGeometricoPromedio;
 	
 	private double desviacionEstandarTGeometrico;
+
 	
 	public Viaje(int sourceID, int dsTID, int hour, double travelTime, double travelTimeDeviation,
 			double geometricTime, double geometricDeviation)
