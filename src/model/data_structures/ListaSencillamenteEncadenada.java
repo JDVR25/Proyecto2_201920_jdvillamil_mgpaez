@@ -4,7 +4,7 @@ package model.data_structures;
 import java.util.Iterator;
 
 
-public class ListaSencillamenteEncadenada<E> extends ListaEncadenadaAbstracta<E>
+public class ListaSencillamenteEncadenada<E> extends ListaEncadenadaAbstracta<E> implements Comparable<ListaSencillamenteEncadenada<E>>
 {
 
 	/**
@@ -298,6 +298,12 @@ public class ListaSencillamenteEncadenada<E> extends ListaEncadenadaAbstracta<E>
 			cantidadElementos--;
 		}
 		return removed;
+	}
+
+	@Override
+	public int compareTo(ListaSencillamenteEncadenada<E> o)
+	{
+		return size() - o.size();
 	}
 	
 	//Codigo basado en lo desarrollado en el ejercicio de nivel 9 de APO 2 (Honores) 201910

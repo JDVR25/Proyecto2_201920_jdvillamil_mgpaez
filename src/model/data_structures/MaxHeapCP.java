@@ -13,6 +13,11 @@ public class MaxHeapCP<T extends Comparable<T>>
 		tamano = 0;
 		elementos = (T[]) new Object[200022];
 	}
+	
+	public int size()
+	{
+		return tamano;
+	}
 
 	public int darNumElementos()
 	{

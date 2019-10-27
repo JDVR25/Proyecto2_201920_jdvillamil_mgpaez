@@ -25,7 +25,8 @@ public class NodoMallaVial implements Comparable<NodoMallaVial>
 	
 	//TODO pendiente
 	@Override
-	public int compareTo(NodoMallaVial o) {
+	public int compareTo(NodoMallaVial o)
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}

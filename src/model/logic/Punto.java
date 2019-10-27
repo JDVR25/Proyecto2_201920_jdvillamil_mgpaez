@@ -28,4 +28,9 @@ public class Punto
 	public void setLatitud(long latitud) {
 		this.latitud = latitud;
 	}
+	
+	public String toString()
+	{
+		return latitud + "-" + longitud;
+	}
 }

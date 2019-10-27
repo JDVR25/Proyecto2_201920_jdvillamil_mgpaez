@@ -17,6 +17,9 @@ import model.data_structures.IEstructura;
 import model.data_structures.ListaSencillamenteEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.Nodo;
+import model.data_structures.RedBlackBST;
+import model.data_structures.TablaHashSeparateChaining;
+
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -35,10 +38,10 @@ public class MVCModelo
 	private ListaSencillamenteEncadenada<Viaje> dias;
 
 	private ListaSencillamenteEncadenada<Viaje> meses;
-	
+
 	private ListaSencillamenteEncadenada<NodoMallaVial> nodos;
-	
-	private ListaSencillamenteEncadenada<Zona> zonas;
+
+	private MaxHeapCP<Zona> zonas;
 	//Para el 1A usar Tabla de hash separate chaining, que sea de tamano 27 para facilitar las cosas, la llave sera la letra inicial necesarios add set y getset
 	//En el 2A Usar cola de prioridad para los nodos
 	//Para el 3A usar arbloes binarios.
@@ -53,10 +56,10 @@ public class MVCModelo
 		dias = new ListaSencillamenteEncadenada<Viaje>();
 
 		meses = new ListaSencillamenteEncadenada<Viaje>();
-		
+
 		nodos = new ListaSencillamenteEncadenada<NodoMallaVial>();
-		
-		zonas = new ListaSencillamenteEncadenada<Zona>();
+
+		zonas = new MaxHeapCP<Zona>();
 
 	}
 
@@ -139,7 +142,7 @@ public class MVCModelo
 
 		}
 	}
-	
+
 	public void cargarDatosNodos()
 	{
 		CSVReader reader = null;
@@ -179,10 +182,10 @@ public class MVCModelo
 
 		}
 	}
-	
+
 	public void cargarDatosZonas()
 	{
-		
+
 		String path = "./data/bogota_cadastral.json";
 		try
 		{
@@ -194,8 +197,8 @@ public class MVCModelo
 			e.printStackTrace();
 		}
 	}
-	
-	public ListaSencillamenteEncadenada<Zona> readJsonStream(InputStream in) throws IOException
+
+	public MaxHeapCP<Zona> readJsonStream(InputStream in) throws IOException
 	{
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 		try
@@ -207,10 +210,10 @@ public class MVCModelo
 			reader.close();
 		}
 	}
-	
-	public ListaSencillamenteEncadenada<Zona> leerTodo(JsonReader reader) throws IOException
+
+	public MaxHeapCP<Zona> leerTodo(JsonReader reader) throws IOException
 	{
-		ListaSencillamenteEncadenada<Zona> zonas = new ListaSencillamenteEncadenada<Zona>();
+		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
 
 		reader.beginObject();
 		while(reader.hasNext())
@@ -232,15 +235,15 @@ public class MVCModelo
 		reader.endArray();
 		return zonas;
 	}
-	
-	public ListaSencillamenteEncadenada<Zona> leerZonas(JsonReader reader) throws IOException
+
+	public MaxHeapCP<Zona> leerZonas(JsonReader reader) throws IOException
 	{
-		ListaSencillamenteEncadenada<Zona> zonas = new ListaSencillamenteEncadenada<Zona>();
+		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
 
 		reader.beginArray();
 		while(reader.hasNext())
 		{
-			zonas.addLast(leerZona(reader));
+			zonas.agregar(leerZona(reader));
 		}
 		reader.endArray();
 		return zonas;
@@ -252,7 +255,7 @@ public class MVCModelo
 		String nombreZona = null;
 		long perimetro = -1;
 		long area = -1;
-		Punto[] coordenadas = null;
+		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
 
 		reader.beginObject();
 		while (reader.hasNext())
@@ -278,7 +281,7 @@ public class MVCModelo
 									reader.beginArray();
 									while (reader.hasNext())
 									{
-										coordenadas = (Punto[]) leerCoordenadas(reader).toArray();
+										coordenadas = leerCoordenadas(reader);
 									}
 									reader.endArray();
 								}
@@ -330,7 +333,7 @@ public class MVCModelo
 		Zona zona = new Zona(nombreZona, perimetro, area, id, coordenadas);
 		return zona;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Punto> leerCoordenadas(JsonReader reader) throws IOException
 	{
 		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
@@ -343,18 +346,18 @@ public class MVCModelo
 		reader.endArray();
 		return coordenadas;
 	}
-	
+
 	public Punto leerCoordenada(JsonReader reader) throws IOException
 	{
 		long longitud = -1;
-		
+
 		long latitud = -1;
-		
+
 		reader.beginArray();
 		while(reader.hasNext())
 		{
 			longitud = reader.nextLong();
-			
+
 			latitud = reader.nextLong();
 		}
 		reader.endArray();
@@ -376,68 +379,149 @@ public class MVCModelo
 	{
 		return dias.size();
 	}
-	
+
 	public int darNumNodos()
 	{
 		return nodos.size();
 	}
-	
+
 	public int darNumZonas()
 	{
 		return zonas.size();
 	}
-	
+
 	//Parte A
-	public ListaSencillamenteEncadenada<String> letrasMasFrecuentesNombreZona(int n)
+	public MaxHeapCP<ListaSencillamenteEncadenada<Zona>> letrasMasFrecuentesNombreZona()
 	{
-		return null;
+		MaxHeapCP<Zona> temp = new MaxHeapCP<Zona>();
+		MaxHeapCP<ListaSencillamenteEncadenada<Zona>> respuesta = new MaxHeapCP<ListaSencillamenteEncadenada<Zona>>();
+		for(char i = 'a'; i <= 'z'; i = (char) (i +1))
+		{
+			ListaSencillamenteEncadenada<Zona> listaZonas = new ListaSencillamenteEncadenada<Zona>();
+			boolean listo = false;
+			while(!listo && !zonas.esVacia())
+			{
+				Zona laZona = zonas.sacarMax();
+				if(laZona.getNombre().charAt(0) == i)
+				{
+					listaZonas.addLast(laZona);
+				}
+				else
+				{
+					listo = true;
+				}
+				temp.agregar(laZona);
+			}
+			respuesta.agregar(listaZonas);
+		}
+		zonas = temp;
+		return respuesta;
 	}
-	
-	public MaxHeapCP<NodoMallaVial> darNodosDelimitantesDeZona(double latitud, double longitud)
+
+	public ListaSencillamenteEncadenada<NodoZona> darNodosDelimitantesDeZona(double latitud, double longitud)
 	{
-		//TODO pedir aclaracion sobre lo que toca hacer el enunciado es confuso, otra vez
-		return null;
+		double latitudTrun = latitud;
+		latitudTrun=latitudTrun*100;
+		latitudTrun = (int)latitudTrun;
+		latitudTrun = latitudTrun/100;
+
+		double longitudTrun = longitud;
+		longitudTrun=longitudTrun*100;
+		longitudTrun = (int)longitudTrun;
+		longitudTrun = longitudTrun/100;
+
+		ListaSencillamenteEncadenada<NodoZona> respuesta = new ListaSencillamenteEncadenada<NodoZona>();
+
+		MaxHeapCP<Zona> temp = new MaxHeapCP<Zona>();
+		TablaHashSeparateChaining<String, NodoZona> hashTable = new TablaHashSeparateChaining<String, NodoZona>();
+		while(!zonas.esVacia())
+		{
+			Zona laZona = zonas.sacarMax();
+			for(Punto point : laZona.getCoordenadas())
+			{
+				NodoZona nuevo = new NodoZona(laZona.getNombre(), point.getLongitud(), point.getLatitud());
+				hashTable.put(point.toString(), nuevo);
+			}
+			temp.agregar(laZona);
+		}
+		Iterator<String> llaves = hashTable.keys();
+		while(llaves.hasNext())
+		{
+			String cadena = llaves.next();
+			String[] info = cadena.split("-");
+			double latitudNodo = Double.parseDouble(info[0]);
+			latitudNodo = latitudNodo*100;
+			latitudNodo = (int)latitudNodo;
+			latitudNodo = latitudNodo/100;
+
+			double longitudNodo = Double.parseDouble(info[1]);
+			longitudNodo = longitudNodo*100;
+			longitudNodo = (int)longitudNodo;
+			longitudNodo = longitudNodo/100;
+
+			if(latitudTrun == latitudNodo && longitudTrun == longitudNodo)
+			{
+				respuesta.addLast(hashTable.get(cadena));
+			}
+		}
+		zonas = temp;
+		return respuesta;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreDentroDeRango(double minimo, double maximo)
 	{
-		return null;
+		RedBlackBST<Double, Viaje> arbol = new RedBlackBST<Double, Viaje>();
+		ListaSencillamenteEncadenada<Viaje> resp = new ListaSencillamenteEncadenada<Viaje>();
+		for(Viaje temp : meses)
+		{
+			arbol.put(temp.darTiempoViaje(), temp);
+		}
+		Iterator<Viaje> it = arbol.valuesInRange(minimo, maximo);
+		while(it.hasNext())
+		{
+			Viaje elemento = it.next();
+			if(elemento.darHoraOMesODia() <= 3 && elemento.darHoraOMesODia() > 0)
+			{
+				resp.addLast(elemento);
+			}
+		}
+		return resp;
 	}
-	
+
 	//Parte B
 	//Nota el tipo de lo que retorna los metodos es sugerido, si se hacen cambios es posible que surjan errores en controller
 	public ListaSencillamenteEncadenada<Zona> darZonasMasAlNorte(int n)
 	{
 		return null;
 	}
-	
+
 	public MaxHeapCP<NodoMallaVial> darNodosMallaVial(double latitud, double longitud)
 	{
 		//TODO pedir aclaracion sobre lo que toca hacer el enunciado es confuso, otra vez
 		return null;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreConDesvEstandEnRango(double minimo, double maximo)
 	{
 		return null;
 	}
-	
+
 	//Parte C
 	public ListaSencillamenteEncadenada<Viaje> darTiemposZonaOrigenHora(int idOrigen, int hora)
 	{
 		return null;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Viaje> darTiemposZonaDestRangoHoras(int idOrigen, int horaMin, int horaMax)
 	{
 		return null;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Zona> zonasMasNodos(int n)
 	{
 		return null;
 	}
-	
+
 	public ListaSencillamenteEncadenada<Double> datosFaltantesPrimerSemestre()
 	{
 		return null;
