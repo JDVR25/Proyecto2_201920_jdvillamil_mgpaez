@@ -21,6 +21,10 @@ import model.data_structures.RedBlackBST;
 import model.data_structures.TablaHashSeparateChaining;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
@@ -200,7 +204,10 @@ public class MVCModelo
 
 	public MaxHeapCP<Zona> readJsonStream(InputStream in) throws IOException
 	{
+		//TODO pendiente
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+		JsonParser entradas = new JsonParser();
+		entradas.parse(reader);
 		try
 		{
 			return leerTodo(reader);
