@@ -119,7 +119,6 @@ public class Controller {
 				break;
 
 			case 4: 
-				//TODO pendiente
 				try
 				{
 					if(cargaRealizada)
