@@ -2,9 +2,9 @@ package model.logic;
 
 import model.data_structures.ListaSencillamenteEncadenada;
 
-public class Zona implements Comparable<Zona>
+public abstract class Zona
 {
-	private String nombre;
+	protected String nombre;
 	
 	private long perimetro;
 	
@@ -67,11 +67,6 @@ private ListaSencillamenteEncadenada<Punto> coordenadas;
 		this.id = id;
 	}
 
-	@Override
-	public int compareTo(Zona o)
-	{
-		return nombre.compareTo(o.nombre);
-	}
 	
 	
 }

@@ -45,7 +45,7 @@ public class MVCModelo
 
 	private ListaSencillamenteEncadenada<NodoMallaVial> nodos;
 
-	private MaxHeapCP<Zona> zonas;
+	private ListaSencillamenteEncadenada<Zona> zonas;
 	//Para el 1A usar Tabla de hash separate chaining, que sea de tamano 27 para facilitar las cosas, la llave sera la letra inicial necesarios add set y getset
 	//En el 2A Usar cola de prioridad para los nodos
 	//Para el 3A usar arbloes binarios.
@@ -63,7 +63,7 @@ public class MVCModelo
 
 		nodos = new ListaSencillamenteEncadenada<NodoMallaVial>();
 
-		zonas = new MaxHeapCP<Zona>();
+		zonas = new ListaSencillamenteEncadenada<Zona>();
 
 	}
 
@@ -187,190 +187,190 @@ public class MVCModelo
 		}
 	}
 
-	public void cargarDatosZonas()
-	{
-
-		String path = "./data/bogota_cadastral.json";
-		try
-		{
-			zonas = readJsonStream(new FileInputStream(path));
-
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public MaxHeapCP<Zona> readJsonStream(InputStream in) throws IOException
-	{
-		//TODO pendiente
-		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-		JsonParser entradas = new JsonParser();
-		entradas.parse(reader);
-		try
-		{
-			return leerTodo(reader);
-		}
-		finally
-		{
-			reader.close();
-		}
-	}
-
-	public MaxHeapCP<Zona> leerTodo(JsonReader reader) throws IOException
-	{
-		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
-
-		reader.beginObject();
-		while(reader.hasNext())
-		{
-			String name = reader.nextName();
-			if (name.equals("type") && reader.nextString().equals("FeatureCollection"))
-			{
-				name = reader.nextName();
-				if(name.equals("features"))
-				{
-					zonas = leerZonas(reader);
-				}
-			}
-			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endArray();
-		return zonas;
-	}
-
-	public MaxHeapCP<Zona> leerZonas(JsonReader reader) throws IOException
-	{
-		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
-
-		reader.beginArray();
-		while(reader.hasNext())
-		{
-			zonas.agregar(leerZona(reader));
-		}
-		reader.endArray();
-		return zonas;
-	}
-
-	public Zona leerZona(JsonReader reader) throws IOException
-	{
-		int id = -1;
-		String nombreZona = null;
-		long perimetro = -1;
-		long area = -1;
-		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
-
-		reader.beginObject();
-		while (reader.hasNext())
-		{
-			String name = reader.nextName();
-			if (name.equals("type") && reader.nextString().equals("Feature"))
-			{
-				name = reader.nextName();
-				if(name.equals("geometry"))
-				{
-					reader.beginObject();
-					while (reader.hasNext())
-					{
-						name = reader.nextName();
-						if (name.equals("type") && reader.nextString().equals("MultiPolygon"))
-						{
-							name = reader.nextName();
-							if(name.equals("coordinates"))
-							{
-								reader.beginArray();
-								while (reader.hasNext())
-								{
-									reader.beginArray();
-									while (reader.hasNext())
-									{
-										coordenadas = leerCoordenadas(reader);
-									}
-									reader.endArray();
-								}
-								reader.endArray();
-							}
-						}
-						else
-						{
-							reader.skipValue();
-						}
-					}
-					reader.endObject();
-				}
-				else if(name.equals("properties"))
-				{
-					name = reader.nextName();
-					if(name.equals("MOVEMENT_ID"))
-					{
-						id = Integer.parseInt(reader.nextString());
-					}
-					else if(name.equals("scanombre"))
-					{
-						nombreZona = reader.nextString();
-					}
-					else if(name.equals("shape_leng"))
-					{
-						perimetro = reader.nextLong();
-					}
-					else if(name.equals("shape_area"))
-					{
-						area = reader.nextLong();
-					}
-					else
-					{
-						reader.skipValue();
-					}
-				}
-				else
-				{
-					reader.skipValue();
-				}
-			}
-			else
-			{
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		Zona zona = new Zona(nombreZona, perimetro, area, id, coordenadas);
-		return zona;
-	}
-
-	public ListaSencillamenteEncadenada<Punto> leerCoordenadas(JsonReader reader) throws IOException
-	{
-		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
-
-		reader.beginArray();
-		while(reader.hasNext())
-		{
-			coordenadas.addLast(leerCoordenada(reader));
-		}
-		reader.endArray();
-		return coordenadas;
-	}
-
-	public Punto leerCoordenada(JsonReader reader) throws IOException
-	{
-		long longitud = -1;
-
-		long latitud = -1;
-
-		reader.beginArray();
-		while(reader.hasNext())
-		{
-			longitud = reader.nextLong();
-
-			latitud = reader.nextLong();
-		}
-		reader.endArray();
-		Punto coordenada = new Punto(longitud, latitud);
-		return coordenada;
-	}
+//	public void cargarDatosZonas()
+//	{
+//
+//		String path = "./data/bogota_cadastral.json";
+//		try
+//		{
+//			zonas = readJsonStream(new FileInputStream(path));
+//
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	public ListaSencillamenteEncadenada<Zona> readJsonStream(InputStream in) throws IOException
+//	{
+//		//TODO pendiente
+//		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+//		JsonParser entradas = new JsonParser();
+//		entradas.parse(reader);
+//		try
+//		{
+//			return leerTodo(reader);
+//		}
+//		finally
+//		{
+//			reader.close();
+//		}
+//	}
+//
+//	public ListaSencillamenteEncadenada<Zona> leerTodo(JsonReader reader) throws IOException
+//	{
+//		ListaSencillamenteEncadenada<Zona> zonas = new MaxHeapCP<Zona>();
+//
+//		reader.beginObject();
+//		while(reader.hasNext())
+//		{
+//			String name = reader.nextName();
+//			if (name.equals("type") && reader.nextString().equals("FeatureCollection"))
+//			{
+//				name = reader.nextName();
+//				if(name.equals("features"))
+//				{
+//					zonas = leerZonas(reader);
+//				}
+//			}
+//			else
+//			{
+//				reader.skipValue();
+//			}
+//		}
+//		reader.endArray();
+//		return zonas;
+//	}
+//
+//	public MaxHeapCP<Zona> leerZonas(JsonReader reader) throws IOException
+//	{
+//		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
+//
+//		reader.beginArray();
+//		while(reader.hasNext())
+//		{
+//			zonas.agregar(leerZona(reader));
+//		}
+//		reader.endArray();
+//		return zonas;
+//	}
+//
+//	public Zona leerZona(JsonReader reader) throws IOException
+//	{
+//		int id = -1;
+//		String nombreZona = null;
+//		long perimetro = -1;
+//		long area = -1;
+//		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
+//
+//		reader.beginObject();
+//		while (reader.hasNext())
+//		{
+//			String name = reader.nextName();
+//			if (name.equals("type") && reader.nextString().equals("Feature"))
+//			{
+//				name = reader.nextName();
+//				if(name.equals("geometry"))
+//				{
+//					reader.beginObject();
+//					while (reader.hasNext())
+//					{
+//						name = reader.nextName();
+//						if (name.equals("type") && reader.nextString().equals("MultiPolygon"))
+//						{
+//							name = reader.nextName();
+//							if(name.equals("coordinates"))
+//							{
+//								reader.beginArray();
+//								while (reader.hasNext())
+//								{
+//									reader.beginArray();
+//									while (reader.hasNext())
+//									{
+//										coordenadas = leerCoordenadas(reader);
+//									}
+//									reader.endArray();
+//								}
+//								reader.endArray();
+//							}
+//						}
+//						else
+//						{
+//							reader.skipValue();
+//						}
+//					}
+//					reader.endObject();
+//				}
+//				else if(name.equals("properties"))
+//				{
+//					name = reader.nextName();
+//					if(name.equals("MOVEMENT_ID"))
+//					{
+//						id = Integer.parseInt(reader.nextString());
+//					}
+//					else if(name.equals("scanombre"))
+//					{
+//						nombreZona = reader.nextString();
+//					}
+//					else if(name.equals("shape_leng"))
+//					{
+//						perimetro = reader.nextLong();
+//					}
+//					else if(name.equals("shape_area"))
+//					{
+//						area = reader.nextLong();
+//					}
+//					else
+//					{
+//						reader.skipValue();
+//					}
+//				}
+//				else
+//				{
+//					reader.skipValue();
+//				}
+//			}
+//			else
+//			{
+//				reader.skipValue();
+//			}
+//		}
+//		reader.endObject();
+//		Zona zona = new Zona(nombreZona, perimetro, area, id, coordenadas);
+//		return zona;
+//	}
+//
+//	public ListaSencillamenteEncadenada<Punto> leerCoordenadas(JsonReader reader) throws IOException
+//	{
+//		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
+//
+//		reader.beginArray();
+//		while(reader.hasNext())
+//		{
+//			coordenadas.addLast(leerCoordenada(reader));
+//		}
+//		reader.endArray();
+//		return coordenadas;
+//	}
+//
+//	public Punto leerCoordenada(JsonReader reader) throws IOException
+//	{
+//		long longitud = -1;
+//
+//		long latitud = -1;
+//
+//		reader.beginArray();
+//		while(reader.hasNext())
+//		{
+//			longitud = reader.nextLong();
+//
+//			latitud = reader.nextLong();
+//		}
+//		reader.endArray();
+//		Punto coordenada = new Punto(longitud, latitud);
+//		return coordenada;
+//	}
 
 	public int darNumViajesMes()
 	{
@@ -400,15 +400,19 @@ public class MVCModelo
 	//Parte A
 	public MaxHeapCP<ListaSencillamenteEncadenada<Zona>> letrasMasFrecuentesNombreZona()
 	{
-		MaxHeapCP<Zona> temp = new MaxHeapCP<Zona>();
+		MaxHeapCP<ZonaAux1> temp = new MaxHeapCP<ZonaAux1>();
 		MaxHeapCP<ListaSencillamenteEncadenada<Zona>> respuesta = new MaxHeapCP<ListaSencillamenteEncadenada<Zona>>();
+		for(Zona laZona: zonas)
+		{
+			temp.agregar((ZonaAux1) laZona);
+		}
 		for(char i = 'a'; i <= 'z'; i = (char) (i +1))
 		{
 			ListaSencillamenteEncadenada<Zona> listaZonas = new ListaSencillamenteEncadenada<Zona>();
 			boolean listo = false;
-			while(!listo && !zonas.esVacia())
+			while(!listo && !temp.esVacia())
 			{
-				Zona laZona = zonas.sacarMax();
+				Zona laZona = temp.sacarMax();
 				if(laZona.getNombre().charAt(0) == i)
 				{
 					listaZonas.addLast(laZona);
@@ -417,11 +421,9 @@ public class MVCModelo
 				{
 					listo = true;
 				}
-				temp.agregar(laZona);
 			}
 			respuesta.agregar(listaZonas);
 		}
-		zonas = temp;
 		return respuesta;
 	}
 
@@ -439,17 +441,14 @@ public class MVCModelo
 
 		ListaSencillamenteEncadenada<NodoZona> respuesta = new ListaSencillamenteEncadenada<NodoZona>();
 
-		MaxHeapCP<Zona> temp = new MaxHeapCP<Zona>();
 		TablaHashSeparateChaining<String, NodoZona> hashTable = new TablaHashSeparateChaining<String, NodoZona>();
-		while(!zonas.esVacia())
+		for(Zona laZona: zonas)
 		{
-			Zona laZona = zonas.sacarMax();
 			for(Punto point : laZona.getCoordenadas())
 			{
 				NodoZona nuevo = new NodoZona(laZona.getNombre(), point.getLongitud(), point.getLatitud());
 				hashTable.put(point.toString(), nuevo);
 			}
-			temp.agregar(laZona);
 		}
 		Iterator<String> llaves = hashTable.keys();
 		while(llaves.hasNext())
@@ -471,7 +470,6 @@ public class MVCModelo
 				respuesta.addLast(hashTable.get(cadena));
 			}
 		}
-		zonas = temp;
 		return respuesta;
 	}
 
@@ -545,9 +543,15 @@ public class MVCModelo
 		return resp;
 	}
 
-	public ListaSencillamenteEncadenada<Zona> zonasMasNodos(int n)
+	public MaxHeapCP<ZonaAux> zonasMasNodos()
 	{
-		return null;
+		MaxHeapCP<ZonaAux> respuesta = new MaxHeapCP<ZonaAux>();
+		for(Zona laZona: zonas)
+		{
+			respuesta.agregar((ZonaAux)laZona);
+		}
+
+		return respuesta;
 	}
 
 	public ListaSencillamenteEncadenada<Double> datosFaltantesPrimerSemestre()
