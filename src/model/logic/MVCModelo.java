@@ -516,12 +516,33 @@ public class MVCModelo
 	//Parte C
 	public ListaSencillamenteEncadenada<Viaje> darTiemposZonaOrigenHora(int idOrigen, int hora)
 	{
-		return null;
+		ListaSencillamenteEncadenada<Viaje> respuesta = new ListaSencillamenteEncadenada<Viaje>();
+		TablaHashSeparateChaining<String, Viaje> hashTable = new TablaHashSeparateChaining<String, Viaje>();
+		for(Viaje temp : horas)
+		{
+			hashTable.put(temp.darIDOrigen() + "-" + temp.darHoraOMesODia() + "-" + temp.darIdDestino(), temp);
+		}
+		Iterator<String> llaves = hashTable.keys();
+		while(llaves.hasNext())
+		{
+			String cadena = llaves.next();
+			if(cadena.startsWith(idOrigen + "-" + hora))
+			{
+				respuesta.addLast(hashTable.get(cadena));
+			}
+		}
+		return respuesta;
 	}
 
-	public ListaSencillamenteEncadenada<Viaje> darTiemposZonaDestRangoHoras(int idOrigen, int horaMin, int horaMax)
+	public Iterator<Viaje> darTiemposZonaDestRangoHoras(int idDestino, int horaMin, int horaMax)
 	{
-		return null;
+		RedBlackBST<String, Viaje> arbol = new RedBlackBST<String, Viaje>();
+		for(Viaje temp : horas)
+		{
+			arbol.put(temp.darIdDestino() + "-" + temp.darHoraOMesODia() + "-" + temp.darIDOrigen(), temp);
+		}
+		Iterator<Viaje> resp = arbol.valuesInRange(idDestino + "-" + horaMin, idDestino + "-" + horaMax);
+		return resp;
 	}
 
 	public ListaSencillamenteEncadenada<Zona> zonasMasNodos(int n)
