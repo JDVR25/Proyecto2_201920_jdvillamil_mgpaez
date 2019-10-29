@@ -22,4 +22,14 @@ public class NodoZona
 	{
 		return coordenada;
 	}
+	
+	public long darLatitud()
+	{
+		return coordenada.getLatitud();
+	}
+	
+	public long darLongitud()
+	{
+		return coordenada.getLongitud();
+	}
 }
