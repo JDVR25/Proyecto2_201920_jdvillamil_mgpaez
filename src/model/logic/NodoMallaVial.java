@@ -6,7 +6,7 @@ public class NodoMallaVial implements Comparable<NodoMallaVial>
 	
 	private Punto coordenada;
 
-	public NodoMallaVial(int pId, long pLongitud, long pLatitud)
+	public NodoMallaVial(int pId, double pLongitud, double pLatitud)
 	{
 		id = pId;
 		

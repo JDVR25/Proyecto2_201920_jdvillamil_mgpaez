@@ -15,10 +15,12 @@ public class Viaje implements Comparable<Viaje>
 	private double tiempoGeometricoPromedio;
 	
 	private double desviacionEstandarTGeometrico;
+	
+	private int trimestre;
 
 	
 	public Viaje(int sourceID, int dsTID, int hour, double travelTime, double travelTimeDeviation,
-			double geometricTime, double geometricDeviation)
+			double geometricTime, double geometricDeviation, int pTrimestre)
 	{
 		idZonaOrigen = sourceID;
 		
@@ -33,6 +35,13 @@ public class Viaje implements Comparable<Viaje>
 		tiempoGeometricoPromedio = geometricTime;
 		
 		desviacionEstandarTGeometrico = geometricDeviation;
+		
+		trimestre = pTrimestre;
+	}
+	
+	public int darTrimestre()
+	{
+		return trimestre;
 	}
 	
 	public int darIDOrigen()

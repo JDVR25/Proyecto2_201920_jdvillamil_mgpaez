@@ -6,7 +6,7 @@ public class NodoZona
 	
 	private Punto coordenada;
 
-	public NodoZona(String pZona, long pLongitud, long pLatitud)
+	public NodoZona(String pZona, double pLongitud, double pLatitud)
 	{
 		zona = pZona;
 		
@@ -23,12 +23,12 @@ public class NodoZona
 		return coordenada;
 	}
 	
-	public long darLatitud()
+	public double darLatitud()
 	{
 		return coordenada.getLatitud();
 	}
 	
-	public long darLongitud()
+	public double darLongitud()
 	{
 		return coordenada.getLongitud();
 	}

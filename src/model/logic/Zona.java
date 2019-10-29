@@ -5,25 +5,25 @@ import model.data_structures.ListaSencillamenteEncadenada;
 public abstract class Zona
 {
 	protected String nombre;
-	
-	private long perimetro;
-	
-	private long area;
-	
-	private int id;
-	
-private ListaSencillamenteEncadenada<Punto> coordenadas;
-	
-	public Zona(String pNombre, long pPerimetro, long pArea, int pId, ListaSencillamenteEncadenada<Punto>  pCoord)
+
+	protected double perimetro;
+
+	protected double area;
+
+	protected int id;
+
+	protected ListaSencillamenteEncadenada<Punto> coordenadas;
+
+	public Zona(String pNombre, double pPerimetro, double pArea, int pId, ListaSencillamenteEncadenada<Punto>  pCoord)
 	{
 		nombre = pNombre;
-		
+
 		perimetro = pPerimetro;
-		
+
 		area = pArea;
-		
+
 		id = pId;
-		
+
 		coordenadas = pCoord;
 	}
 
@@ -43,19 +43,19 @@ private ListaSencillamenteEncadenada<Punto> coordenadas;
 		this.nombre = nombre;
 	}
 
-	public long getPerimetro() {
+	public double getPerimetro() {
 		return perimetro;
 	}
 
-	public void setPerimetro(long perimetro) {
+	public void setPerimetro(double perimetro) {
 		this.perimetro = perimetro;
 	}
 
-	public long getArea() {
+	public double getArea() {
 		return area;
 	}
 
-	public void setArea(long area) {
+	public void setArea(double area) {
 		this.area = area;
 	}
 
@@ -67,6 +67,6 @@ private ListaSencillamenteEncadenada<Punto> coordenadas;
 		this.id = id;
 	}
 
-	
-	
+
+
 }

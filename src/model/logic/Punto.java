@@ -2,30 +2,30 @@ package model.logic;
 
 public class Punto
 {
-	private long longitud;
+	private double longitud;
 	
-	private long latitud;
+	private double latitud;
 	
-	public Punto(long pLong, long pLatitud)
+	public Punto(double pLong, double pLatitud)
 	{
 		longitud = pLong;
 		
 		latitud = pLatitud;
 	}
 
-	public long getLongitud() {
+	public double getLongitud() {
 		return longitud;
 	}
 
-	public void setLongitud(long longitud) {
+	public void setLongitud(double longitud) {
 		this.longitud = longitud;
 	}
 
-	public long getLatitud() {
+	public double getLatitud() {
 		return latitud;
 	}
 
-	public void setLatitud(long latitud) {
+	public void setLatitud(double latitud) {
 		this.latitud = latitud;
 	}
 	

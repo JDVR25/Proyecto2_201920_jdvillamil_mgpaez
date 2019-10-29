@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.opencsv.CSVReader;
+
+import javafx.util.Pair;
 import model.data_structures.IEstructura;
 import model.data_structures.ListaSencillamenteEncadenada;
 import model.data_structures.MaxHeapCP;
@@ -84,7 +86,7 @@ public class MVCModelo
 				{
 					Viaje nuevo = new Viaje(Integer.parseInt(param[0]), Integer.parseInt(param[1]),
 							Integer.parseInt(param[2]), Double.parseDouble(param[3]), Double.parseDouble(param[4]),
-							Double.parseDouble(param[5]), Double.parseDouble(param[6]));
+							Double.parseDouble(param[5]), Double.parseDouble(param[6]), trimestre);
 					horas.addLast(nuevo);
 				}
 				catch(NumberFormatException e)
@@ -100,7 +102,7 @@ public class MVCModelo
 				{
 					Viaje nuevo = new Viaje(Integer.parseInt(param[0]), Integer.parseInt(param[1]),
 							Integer.parseInt(param[2]), Double.parseDouble(param[3]), Double.parseDouble(param[4]),
-							Double.parseDouble(param[5]), Double.parseDouble(param[6]));
+							Double.parseDouble(param[5]), Double.parseDouble(param[6]), trimestre);
 					meses.addLast(nuevo);
 				}
 				catch(NumberFormatException e)
@@ -116,7 +118,7 @@ public class MVCModelo
 				{
 					Viaje nuevo = new Viaje(Integer.parseInt(param[0]), Integer.parseInt(param[1]),
 							Integer.parseInt(param[2]), Double.parseDouble(param[3]), Double.parseDouble(param[4]),
-							Double.parseDouble(param[5]), Double.parseDouble(param[6]));
+							Double.parseDouble(param[5]), Double.parseDouble(param[6]), trimestre);
 					dias.addLast(nuevo);
 				}
 				catch(NumberFormatException e)
@@ -157,7 +159,7 @@ public class MVCModelo
 			{
 				try
 				{
-					NodoMallaVial nuevo = new NodoMallaVial(Integer.parseInt(param[0]), Long.parseLong(param[1]), Long.parseLong(param[2]));
+					NodoMallaVial nuevo = new NodoMallaVial(Integer.parseInt(param[0]), Double.parseDouble(param[1]), Double.parseDouble(param[2]));
 					nodos.addLast(nuevo);
 				}
 				catch(NumberFormatException e)
@@ -187,9 +189,8 @@ public class MVCModelo
 		}
 	}
 
-//	public void cargarDatosZonas()
-//	{
-//
+	public void cargarDatosZonas()
+	{
 //		String path = "./data/bogota_cadastral.json";
 //		try
 //		{
@@ -200,7 +201,7 @@ public class MVCModelo
 //		{
 //			e.printStackTrace();
 //		}
-//	}
+	}
 //
 //	public ListaSencillamenteEncadenada<Zona> readJsonStream(InputStream in) throws IOException
 //	{
@@ -260,8 +261,8 @@ public class MVCModelo
 //	{
 //		int id = -1;
 //		String nombreZona = null;
-//		long perimetro = -1;
-//		long area = -1;
+//		double perimetro = -1;
+//		double area = -1;
 //		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
 //
 //		reader.beginObject();
@@ -356,9 +357,9 @@ public class MVCModelo
 //
 //	public Punto leerCoordenada(JsonReader reader) throws IOException
 //	{
-//		long longitud = -1;
+//		double longitud = -1;
 //
-//		long latitud = -1;
+//		double latitud = -1;
 //
 //		reader.beginArray();
 //		while(reader.hasNext())
@@ -447,7 +448,7 @@ public class MVCModelo
 			for(Punto point : laZona.getCoordenadas())
 			{
 				NodoZona nuevo = new NodoZona(laZona.getNombre(), point.getLongitud(), point.getLatitud());
-				hashTable.put(point.toString(), nuevo);
+				hashTable.put(point.toString() + "-" + laZona.getNombre(), nuevo);
 			}
 		}
 		Iterator<String> llaves = hashTable.keys();
@@ -554,8 +555,30 @@ public class MVCModelo
 		return respuesta;
 	}
 
-	public ListaSencillamenteEncadenada<Double> datosFaltantesPrimerSemestre()
+	public ListaSencillamenteEncadenada<Pair<Integer, Double>> datosFaltantesPrimerSemestre()
 	{
-		return null;
+		int numDatosComp = 48*darNumZonas();
+		MaxHeapCP<ZonaAux4> temp = new MaxHeapCP<ZonaAux4>();
+		ListaSencillamenteEncadenada<Pair<Integer, Double>> resp = new ListaSencillamenteEncadenada<Pair<Integer,Double>>();
+		for(Zona laZona: zonas)
+		{
+			temp.agregar((ZonaAux4)laZona);
+		}
+		int actual = 1;
+		int conteo = 0;
+		while(!temp.esVacia())
+		{
+			Zona laZona = temp.sacarMax();
+			if(actual != laZona.getId())
+			{
+				double porcentaje = conteo/numDatosComp;
+				Pair<Integer, Double> datos = new Pair<Integer, Double>(actual, porcentaje);
+				resp.addLast(datos);
+				actual++;
+				conteo = 0;
+			}
+			conteo++;
+		}
+		return resp;
 	}
 }
