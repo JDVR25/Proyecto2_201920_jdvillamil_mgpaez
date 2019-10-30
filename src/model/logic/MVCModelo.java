@@ -354,22 +354,111 @@ public class MVCModelo
 	}
 
 	//Parte B
-	//Nota el tipo de lo que retorna los metodos es sugerido, si se hacen cambios es posible que surjan errores en controller
-	public ListaSencillamenteEncadenada<Zona> darZonasMasAlNorte(int n)
-	{
-		return null;
-	}
+	//Parte B
+		/**
+		 * Mostrar las zonas ordenadas desde las que 
+		 * estén más al norte. De cada zona se debe imprimir el 
+		 * nombre y la (latitud, longitud) de su punto más al norte.
+		 * @param n es un valor de entrada
+		 * @return las N zonas que están más al norte. 
+		 */
+		public MaxHeapCP<ListaSencillamenteEncadenada<Zona>> darZonasMasAlNorte(int n)
+		{
+			MaxHeapCP<ZonaAux1> meanWhile = new MaxHeapCP<ZonaAux1>();
+			MaxHeapCP<ListaSencillamenteEncadenada<Zona>> answer = new MaxHeapCP<ListaSencillamenteEncadenada<Zona>>();
+			
+			for(Zona laZona: zonas)
+			{
+				meanWhile.agregar((ZonaAux1) laZona);
+			}
+			
+			int howManyZones = 0;
+			
+			for(int i = 0; i < zonas.size() && howManyZones < n; i++)
+			{
+				ListaSencillamenteEncadenada<Zona> listaZonas = zonas;
+				ListaSencillamenteEncadenada<Punto> maxCoordenadas= zonas.get(i).getCoordenadas();
+				
+				for (int j = 0; j < listaZonas.size(); j++ )
+				{
+					if((maxCoordenadas.compareTo(listaZonas.get(j).getCoordenadas())) > 0 && i !=j)
+						{
+							maxCoordenadas = listaZonas.get(j).getCoordenadas();
+							howManyZones++;
+						}
+				}
+				
+				answer.agregar(maxCoordenadas);
+			}
+			return answer;
+		}
 
-	public MaxHeapCP<NodoMallaVial> darNodosMallaVial(double latitud, double longitud)
-	{
-		//TODO pedir aclaracion sobre lo que toca hacer el enunciado es confuso, otra vez
-		return null;
-	}
+		/**
+		 * Dado una latitud y una longitud, 
+		 * se deben mostrar todos los nodos 
+		 * que tengan esas mismas latitud y longitud 
+		 * truncando a 2 cifras decimales.
+		 * @param latitud
+		 * @param longitud
+		 * @return
+		 */
+		public ListaSencillamenteEncadenada<NodoZona> darNodosMallaVial(double latitud, double longitud)
+		{
+			double latitudTrun = latitud;
+			latitudTrun=latitudTrun*10;
+			latitudTrun = (int)latitudTrun;
+			latitudTrun = latitudTrun/10;
 
-	public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreConDesvEstandEnRango(double minimo, double maximo)
-	{
-		return null;
-	}
+			double longitudTrun = longitud;
+			longitudTrun=longitudTrun*10;
+			longitudTrun = (int)longitudTrun;
+			longitudTrun = longitudTrun/10;
+
+			ListaSencillamenteEncadenada<NodoZona> respuesta = new ListaSencillamenteEncadenada<NodoZona>();
+
+			TablaHashSeparateChaining<String, NodoZona> hashTable = new TablaHashSeparateChaining<String, NodoZona>();
+			for(Zona laZona: zonas)
+			{
+				for(Punto point : laZona.getCoordenadas())
+				{
+					NodoZona nuevo = new NodoZona(laZona.getNombre(), point.getLongitud(), point.getLatitud());
+					hashTable.put(point.toString() + "-" + laZona.getNombre(), nuevo);
+				}
+			}
+			Iterator<String> llaves = hashTable.keys();
+			while(llaves.hasNext())
+			{
+				String cadena = llaves.next();
+				String[] info = cadena.split("-");
+				double latitudNodo = Double.parseDouble(info[0]);
+				latitudNodo = latitudNodo*10;
+				latitudNodo = (int)latitudNodo;
+				latitudNodo = latitudNodo/10;
+
+				double longitudNodo = Double.parseDouble(info[1]);
+				longitudNodo = longitudNodo*10;
+				longitudNodo = (int)longitudNodo;
+				longitudNodo = longitudNodo/10;
+
+				if(latitudTrun == latitudNodo && longitudTrun == longitudNodo)
+				{
+					respuesta.addLast(hashTable.get(cadena));
+				}
+			}
+			return respuesta;
+		}
+
+		/**
+		 * Buscar los tiempos de espera que tienen una desviación 
+		 * estándar en un rango dado y que son del primer trimestre del 2018.
+		 * @param minimo
+		 * @param maximo
+		 * @return
+		 */
+		public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreConDesvEstandEnRango(double minimo, double maximo)
+		{
+			return null;
+		}
 
 	//Parte C
 	public ListaSencillamenteEncadenada<Viaje> darTiemposZonaOrigenHora(int idOrigen, int hora)
