@@ -10,6 +10,7 @@ public class ZonaAux extends Zona implements Comparable<ZonaAux>
 		super(pNombre, pPerimetro, pArea, pId, pCoord);
 	}
 	
+
 	@Override
 	public int compareTo(ZonaAux o)
 	{

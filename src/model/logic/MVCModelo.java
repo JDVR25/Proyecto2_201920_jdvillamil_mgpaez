@@ -1,5 +1,6 @@
 package model.logic;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -188,190 +189,48 @@ public class MVCModelo
 
 		}
 	}
-
+	
 	public void cargarDatosZonas()
 	{
-//		String path = "./data/bogota_cadastral.json";
-//		try
-//		{
-//			zonas = readJsonStream(new FileInputStream(path));
-//
-//		}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		}
+		try
+        {
+            BufferedReader br = new BufferedReader(new FileReader("./data/bogota_cadastral.json"));
+            JsonElement todo = new JsonParser().parse(br);
+            JsonObject general = todo.getAsJsonObject();
+            JsonArray arrZonas = general.getAsJsonArray("features");
+
+
+            for (int i = 0; i < arrZonas.size(); i++)
+            {
+                ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
+                JsonObject zona = arrZonas.get(i).getAsJsonObject();
+                
+                JsonObject geometria = zona.getAsJsonObject("geometry");
+                JsonArray puntos = geometria.getAsJsonArray("coordinates");
+                puntos = puntos.get(0).getAsJsonArray();
+                puntos = puntos.get(0).getAsJsonArray();
+                for (int e = 0; e < puntos.size(); e++)
+                {
+                    JsonArray posicion = puntos.get(e).getAsJsonArray();
+                    double longitud = posicion.get(0).getAsDouble();
+                    double latitud = posicion.get(1).getAsDouble();
+                    coordenadas.addLast(new Punto(longitud, latitud));
+                }
+                JsonObject datos = zona.getAsJsonObject("properties");
+                int id = datos.get("MOVEMENT_ID").getAsInt();
+                String nombre = datos.get("scanombre").getAsString();
+                double perimetro = datos.get("shape_leng").getAsDouble();
+                double area = datos.get("shape_area").getAsDouble();
+                Zona cadastral = new ZonaAux(nombre, perimetro, area, id, coordenadas);
+                zonas.addLast(cadastral);
+            }
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 	}
-//
-//	public ListaSencillamenteEncadenada<Zona> readJsonStream(InputStream in) throws IOException
-//	{
-//		//TODO pendiente
-//		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-//		JsonParser entradas = new JsonParser();
-//		entradas.parse(reader);
-//		try
-//		{
-//			return leerTodo(reader);
-//		}
-//		finally
-//		{
-//			reader.close();
-//		}
-//	}
-//
-//	public ListaSencillamenteEncadenada<Zona> leerTodo(JsonReader reader) throws IOException
-//	{
-//		ListaSencillamenteEncadenada<Zona> zonas = new MaxHeapCP<Zona>();
-//
-//		reader.beginObject();
-//		while(reader.hasNext())
-//		{
-//			String name = reader.nextName();
-//			if (name.equals("type") && reader.nextString().equals("FeatureCollection"))
-//			{
-//				name = reader.nextName();
-//				if(name.equals("features"))
-//				{
-//					zonas = leerZonas(reader);
-//				}
-//			}
-//			else
-//			{
-//				reader.skipValue();
-//			}
-//		}
-//		reader.endArray();
-//		return zonas;
-//	}
-//
-//	public MaxHeapCP<Zona> leerZonas(JsonReader reader) throws IOException
-//	{
-//		MaxHeapCP<Zona> zonas = new MaxHeapCP<Zona>();
-//
-//		reader.beginArray();
-//		while(reader.hasNext())
-//		{
-//			zonas.agregar(leerZona(reader));
-//		}
-//		reader.endArray();
-//		return zonas;
-//	}
-//
-//	public Zona leerZona(JsonReader reader) throws IOException
-//	{
-//		int id = -1;
-//		String nombreZona = null;
-//		double perimetro = -1;
-//		double area = -1;
-//		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
-//
-//		reader.beginObject();
-//		while (reader.hasNext())
-//		{
-//			String name = reader.nextName();
-//			if (name.equals("type") && reader.nextString().equals("Feature"))
-//			{
-//				name = reader.nextName();
-//				if(name.equals("geometry"))
-//				{
-//					reader.beginObject();
-//					while (reader.hasNext())
-//					{
-//						name = reader.nextName();
-//						if (name.equals("type") && reader.nextString().equals("MultiPolygon"))
-//						{
-//							name = reader.nextName();
-//							if(name.equals("coordinates"))
-//							{
-//								reader.beginArray();
-//								while (reader.hasNext())
-//								{
-//									reader.beginArray();
-//									while (reader.hasNext())
-//									{
-//										coordenadas = leerCoordenadas(reader);
-//									}
-//									reader.endArray();
-//								}
-//								reader.endArray();
-//							}
-//						}
-//						else
-//						{
-//							reader.skipValue();
-//						}
-//					}
-//					reader.endObject();
-//				}
-//				else if(name.equals("properties"))
-//				{
-//					name = reader.nextName();
-//					if(name.equals("MOVEMENT_ID"))
-//					{
-//						id = Integer.parseInt(reader.nextString());
-//					}
-//					else if(name.equals("scanombre"))
-//					{
-//						nombreZona = reader.nextString();
-//					}
-//					else if(name.equals("shape_leng"))
-//					{
-//						perimetro = reader.nextLong();
-//					}
-//					else if(name.equals("shape_area"))
-//					{
-//						area = reader.nextLong();
-//					}
-//					else
-//					{
-//						reader.skipValue();
-//					}
-//				}
-//				else
-//				{
-//					reader.skipValue();
-//				}
-//			}
-//			else
-//			{
-//				reader.skipValue();
-//			}
-//		}
-//		reader.endObject();
-//		Zona zona = new Zona(nombreZona, perimetro, area, id, coordenadas);
-//		return zona;
-//	}
-//
-//	public ListaSencillamenteEncadenada<Punto> leerCoordenadas(JsonReader reader) throws IOException
-//	{
-//		ListaSencillamenteEncadenada<Punto> coordenadas = new ListaSencillamenteEncadenada<Punto>();
-//
-//		reader.beginArray();
-//		while(reader.hasNext())
-//		{
-//			coordenadas.addLast(leerCoordenada(reader));
-//		}
-//		reader.endArray();
-//		return coordenadas;
-//	}
-//
-//	public Punto leerCoordenada(JsonReader reader) throws IOException
-//	{
-//		double longitud = -1;
-//
-//		double latitud = -1;
-//
-//		reader.beginArray();
-//		while(reader.hasNext())
-//		{
-//			longitud = reader.nextLong();
-//
-//			latitud = reader.nextLong();
-//		}
-//		reader.endArray();
-//		Punto coordenada = new Punto(longitud, latitud);
-//		return coordenada;
-//	}
 
 	public int darNumViajesMes()
 	{
@@ -476,13 +335,13 @@ public class MVCModelo
 
 	public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreDentroDeRango(double minimo, double maximo)
 	{
-		RedBlackBST<Double, Viaje> arbol = new RedBlackBST<Double, Viaje>();
+		RedBlackBST<String, Viaje> arbol = new RedBlackBST<String, Viaje>();
 		ListaSencillamenteEncadenada<Viaje> resp = new ListaSencillamenteEncadenada<Viaje>();
 		for(Viaje temp : meses)
 		{
-			arbol.put(temp.darTiempoViaje(), temp);
+			arbol.put(temp.darTiempoViaje() + "-" + temp.darIDOrigen() + "-" + temp.darIdDestino(), temp);
 		}
-		Iterator<Viaje> it = arbol.valuesInRange(minimo, maximo);
+		Iterator<Viaje> it = arbol.valuesInRange(minimo + "", maximo + "-999999999" + "-999999999");
 		while(it.hasNext())
 		{
 			Viaje elemento = it.next();
@@ -571,7 +430,7 @@ public class MVCModelo
 			Zona laZona = temp.sacarMax();
 			if(actual != laZona.getId())
 			{
-				double porcentaje = conteo/numDatosComp;
+				double porcentaje = (1 - (conteo/numDatosComp))*100;
 				Pair<Integer, Double> datos = new Pair<Integer, Double>(actual, porcentaje);
 				resp.addLast(datos);
 				actual++;
