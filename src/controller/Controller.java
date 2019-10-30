@@ -4,11 +4,14 @@ import java.util.Scanner;
 
 import com.sun.tracing.dtrace.ModuleName;
 
+import javafx.util.Pair;
 import model.data_structures.IEstructura;
 import model.data_structures.ListaSencillamenteEncadenada;
+import model.data_structures.MaxHeapCP;
 import model.logic.MVCModelo;
 import model.logic.NodoZona;
 import model.logic.Viaje;
+import model.logic.ZonaAux;
 import view.MVCView;
 
 public class Controller {
@@ -69,7 +72,7 @@ public class Controller {
 				{
 					if(cargaRealizada)
 					{
-						view.solicitarNumLetras();
+						view.solicitarNumDatos();
 						dato = lector.nextLine();
 						int numLetras = Integer.parseInt(dato);
 						if(numLetras < 0)
@@ -158,19 +161,101 @@ public class Controller {
 				break;
 
 			case 8: 
-				//TODO pendiente
+				try
+				{
+					if(cargaRealizada)
+					{
+						view.solicitarZona();
+						dato = lector.nextLine();
+						int zonaOrigen = Integer.parseInt(dato);
+						
+						view.solicitarHora();
+						dato = lector.nextLine();
+						int hora = Integer.parseInt(dato);
+						
+						view.impTiemposZonaOrigen(modelo.darTiemposZonaOrigenHora(zonaOrigen, hora));
+					}
+					else
+					{
+						view.errorDatosNoCargados();
+					}
+				}
+				catch (NumberFormatException e)
+				{
+					view.errorNum();
+				}
 				break;
 
 			case 9: 
-				//TODO pendiente
+				try
+				{
+					if(cargaRealizada)
+					{
+						view.solicitarZona();
+						dato = lector.nextLine();
+						int zona = Integer.parseInt(dato);
+						
+						view.pedirLimiteBajo();
+						dato = lector.nextLine();
+						int low = Integer.parseInt(dato);
+						
+						view.pedirLimiteAlto();
+						dato = lector.nextLine();
+						int high = Integer.parseInt(dato);
+						
+						view.impTiemposZonaDestino(modelo.darTiemposZonaDestRangoHoras(zona, low, high));
+					}
+					else
+					{
+						view.errorDatosNoCargados();
+					}
+				}
+				catch (NumberFormatException e)
+				{
+					view.errorNum();
+				}
 				break;
 
 			case 10: 
-				//TODO pendiente
+				try
+				{
+					if(cargaRealizada)
+					{
+						view.solicitarNumDatos();
+						dato = lector.nextLine();
+						int cant = Integer.parseInt(dato);
+						MaxHeapCP<ZonaAux> cola = modelo.zonasMasNodos();
+						view.darZonasCantidadNodos(cola, cant);
+					}
+					else
+					{
+						view.errorDatosNoCargados();
+					}
+				}
+				catch (NumberFormatException e)
+				{
+					view.errorNum();
+				}
 				break;
 
 			case 11: 
-				//TODO pendiente
+				try
+				{
+					if(cargaRealizada)
+					{
+						view.iniciarCreacionAscii();
+						ListaSencillamenteEncadenada<Pair<Integer,Double>> lista = modelo.datosFaltantesPrimerSemestre();
+						view.imprimirInformacionGrafica(lista);
+					}
+					else
+					{
+						view.errorDatosNoCargados();
+					}
+				}
+				catch (NumberFormatException e)
+				{
+					view.errorNum();
+				}
 				break;
 
 			case 12: 

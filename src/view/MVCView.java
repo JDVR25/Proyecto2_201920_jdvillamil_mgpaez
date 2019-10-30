@@ -3,12 +3,14 @@ package view;
 import java.util.Iterator;
 
 import controller.Controller;
+import javafx.util.Pair;
 import model.data_structures.ListaSencillamenteEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.logic.MVCModelo;
 import model.logic.NodoZona;
 import model.logic.Viaje;
 import model.logic.Zona;
+import model.logic.ZonaAux;
 
 public class MVCView 
 {
@@ -55,9 +57,9 @@ public class MVCView
 		System.out.println("Nodos malla vial: " + modelo.darNumNodos());
 	}
 
-	public void solicitarNumLetras()
+	public void solicitarNumDatos()
 	{
-		System.out.println("Ingrese la cantidad de letras que desea consultar");
+		System.out.println("Ingrese la cantidad de datos que desea consultar");
 	}
 
 	public void informacionLetras(MaxHeapCP<ListaSencillamenteEncadenada<Zona>> cola, int consultadas)
@@ -74,17 +76,17 @@ public class MVCView
 			i++;
 		}
 	}
-	
+
 	public void solicitarLatitud()
 	{
 		System.out.println("Ingrese una latitud:");
 	}
-	
+
 	public void solicitarLongitud()
 	{
 		System.out.println("Ingrese una longitud:");
 	}
-	
+
 	public void darNodosZona(ListaSencillamenteEncadenada<NodoZona> lista)
 	{
 		System.out.println("Nodos encontrados: " + lista.size());
@@ -93,17 +95,17 @@ public class MVCView
 			System.out.println("Latitud: " + temp.darLatitud() + ". Longitud: " + temp.darLongitud() + ". Zona: " + temp.darZona());
 		}
 	}
-	
+
 	public void pedirLimiteBajo()
 	{
 		System.out.println("Ingrese el limite bajo del rango:");
 	}
-	
+
 	public void pedirLimiteAlto()
 	{
 		System.out.println("Ingrese el limite alto del rango:");
 	}
-	
+
 	public void darInfoViajes(ListaSencillamenteEncadenada<Viaje> lista)
 	{
 		int i = 0;
@@ -114,6 +116,64 @@ public class MVCView
 			System.out.println("Zona origen: " + temp.darIDOrigen() + ". Zona destino: " + temp.darIdDestino() + ". Mes: " + temp.darHoraOMesODia() + ". Tiempo de viaje: " + temp.darTiempoViaje());
 		}
 	}
+	
+	public void solicitarZona()
+	{
+		System.out.println("Ingrese el id de la zona que desea consultar");
+	}
+	
+	public void solicitarHora()
+	{
+		System.out.println("Ingrese la hora que desea consultar");
+	}
+	
+	public void impTiemposZonaOrigen(ListaSencillamenteEncadenada<Viaje> lista)
+	{
+		for(Viaje temp: lista)
+		{
+			System.out.println("Origen: " + temp.darIDOrigen() + ". Destino: " + temp.darIdDestino() + ". Hora: " + temp.darHoraOMesODia() + ". Tiempo promedio: " + temp.darTiempoViaje());
+		}
+	}
+	
+	public void impTiemposZonaDestino(Iterator<Viaje> it)
+	{
+		while(it.hasNext())
+		{
+			Viaje temp = it.next();
+			System.out.println("Origen: " + temp.darIDOrigen() + ". Destino: " + temp.darIdDestino() + ". Hora: " + temp.darHoraOMesODia() + ". Tiempo promedio: " + temp.darTiempoViaje());
+		}
+	}
+
+	public void darZonasCantidadNodos(MaxHeapCP<ZonaAux> cola, int n)
+	{
+		int i = 0;
+		while(!cola.esVacia() && i < n)
+		{
+			ZonaAux temp = cola.sacarMax();
+			System.out.println("Nombre zona: " + temp.getNombre() + ". Nodos zona: " + temp.getCoordenadas().size() + ".");
+			i++;
+		}
+	}
+
+	public void iniciarCreacionAscii()
+	{
+		System.out.println("Se creara la grafica ASCII de los datos faltantes");
+	}
+
+	public void imprimirInformacionGrafica(ListaSencillamenteEncadenada<Pair<Integer, Double>> datos)
+	{
+		for(Pair<Integer,Double> pareja: datos)
+		{
+			double porcentajeFalta = pareja.getValue();
+			String asteriscos = "";
+			for(double p = porcentajeFalta; p > 0; p -= 2)
+			{
+				asteriscos += "*";
+			}
+			System.out.println(pareja.getKey() + " | " + asteriscos);
+		}
+	}
+
 	public void errorDatosYaCargados()
 	{
 		System.out.println("Ya se han cargado los datos");
