@@ -354,7 +354,6 @@ public class MVCModelo
 	}
 
 	//Parte B
-	//Parte B
 		/**
 		 * Mostrar las zonas ordenadas desde las que 
 		 * estén más al norte. De cada zona se debe imprimir el 
@@ -457,7 +456,22 @@ public class MVCModelo
 		 */
 		public ListaSencillamenteEncadenada<Viaje> tiemposPrimerTrimestreConDesvEstandEnRango(double minimo, double maximo)
 		{
-			return null;
+			RedBlackBST<String, Viaje> arbol = new RedBlackBST<String, Viaje>();
+			ListaSencillamenteEncadenada<Viaje> resp = new ListaSencillamenteEncadenada<Viaje>();
+			for(Viaje temp : meses)
+			{
+				arbol.put(temp.darDesviacionTiempo() + "-" + temp.darIDOrigen() + "-" + temp.darIdDestino(), temp);
+			}
+			Iterator<Viaje> it = arbol.valuesInRange(minimo + "", maximo + "-999999999" + "-999999999");
+			while(it.hasNext())
+			{
+				Viaje elemento = it.next();
+				if(elemento.darHoraOMesODia() <= 3 && elemento.darHoraOMesODia() > 0)
+				{
+					resp.addLast(elemento);
+				}
+			}
+			return resp;
 		}
 
 	//Parte C
